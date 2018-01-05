@@ -1,0 +1,62 @@
+{
+  "project_info": {
+    "project_number": "830152618199",
+    "firebase_url": "https://studentattendance-e57b8.firebaseio.com",
+    "project_id": "studentattendance-e57b8",
+    "storage_bucket": "studentattendance-e57b8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:830152618199:android:11b5c239e683cf32",
+        "android_client_info": {
+          "package_name": "com.example.lrodabaugh14.studentattendance"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "830152618199-pue32mv0ft9idusasgskni1ruj6tmfoe.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.lrodabaugh14.studentattendance",
+            "certificate_hash": "bfbc6f80401165762bc8ceb446251d2630b142bb"
+          }
+        },
+        {
+          "client_id": "830152618199-2kedb1daab0e213aolc7tnl7o3h87ig3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBoGoCR-oLF_4yjCvkQFwsqonWiQuiPWF4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "830152618199-2kedb1daab0e213aolc7tnl7o3h87ig3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "830152618199-s7aiool92c3bi68s7s5chnu2b9ge9gjs.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "Raptor.SeniorProject"
+              }
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
