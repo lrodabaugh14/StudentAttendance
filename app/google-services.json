@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "830152618199-lqc02r3kp9cjc4gvrtcdiarpkmlc41j1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.lrodabaugh14.studentattendance",
+            "certificate_hash": "07d3b6633d6fe763da32dd4098c81f0c55606d5f"
+          }
+        },
+        {
           "client_id": "830152618199-pue32mv0ft9idusasgskni1ruj6tmfoe.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -40,15 +48,15 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "830152618199-2kedb1daab0e213aolc7tnl7o3h87ig3.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
               "client_id": "830152618199-s7aiool92c3bi68s7s5chnu2b9ge9gjs.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
                 "bundle_id": "Raptor.SeniorProject"
               }
+            },
+            {
+              "client_id": "830152618199-2kedb1daab0e213aolc7tnl7o3h87ig3.apps.googleusercontent.com",
+              "client_type": 3
             }
           ]
         },
