@@ -99,7 +99,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mProgressView = findViewById(R.id.login_progress);
 
 //        // THis code is to skip login. Comment out when done testing
-//        String username = "candace_farmer";
+//        String username = "landon_rodabaugh";
 //        String password = "password";
 //
 //        showProgress(true);
@@ -150,7 +150,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 populateAutoComplete();
             }
-    }
+        }
     }
 
 

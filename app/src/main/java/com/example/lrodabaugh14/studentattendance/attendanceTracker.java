@@ -1,5 +1,6 @@
 package com.example.lrodabaugh14.studentattendance;
 
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -12,7 +13,10 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.Switch;
+import android.widget.TableLayout;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -99,11 +103,27 @@ public class attendanceTracker extends AppCompatActivity {
 
             LinearLayout w = new LinearLayout(this);
             w.setOrientation(LinearLayout.HORIZONTAL);
+            w.setPadding(16,16,16,16);
+//            LinearLayout.LayoutParams Wider = new LinearLayout.LayoutParams(
+//                    LinearLayout.LayoutParams.MATCH_PARENT,
+//                    LinearLayout.LayoutParams.MATCH_PARENT,
+//                    2.0f
+//            );
 
             // Add text
             TextView tv = new TextView(this);
+            tv.setTextSize(20);
+            tv.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT, 2f));
+//            tv.layout(Wider);
             Switch s = new Switch(this);
+            s.setChecked(true);
+            s.setHighlightColor(Color.GREEN);
+            s.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT, 1f));
+
+
+            // DO SOME FORMATTING stuff
             tv.setText(stu.get("Name").toString());
+
 //            tv.setId(Integer.getInteger(key));
             w.addView(tv);
             w.addView(s);
