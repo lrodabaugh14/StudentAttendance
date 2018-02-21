@@ -97,7 +97,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
-
+//
 //        // THis code is to skip login. Comment out when done testing
 //        String username = "landon_rodabaugh";
 //        String password = "password";
@@ -105,9 +105,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 //        showProgress(true);
 //        mAuthTask = new UserLoginTask(username, password);
 //        mAuthTask.execute((Void) null);
-//        //Also just return true rather than get all data for noww
-//
-//        //End of skip login code
+
+        //End of skip login code
     }
 
     private void populateAutoComplete() {

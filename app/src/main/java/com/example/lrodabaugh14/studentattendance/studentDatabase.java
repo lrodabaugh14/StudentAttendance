@@ -3,6 +3,7 @@ package com.example.lrodabaugh14.studentattendance;
 
 
 import android.os.Looper;
+import android.text.format.DateFormat;
 import android.widget.ArrayAdapter;
 
 import com.google.firebase.database.ChildEventListener;
@@ -13,7 +14,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import android.os.Handler;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -140,5 +143,17 @@ public class studentDatabase {
 
                 );
         return userInfo;
+    }
+
+    public void submitAttendance(String strClass, List<String> absentStudents){
+        DatabaseReference classAttendance =  dbRef.child("ClassAttendance").child(strClass);
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+
+        HashMap<String, Object> classDay = new HashMap();
+        classDay.put(dateFormat.format(date),absentStudents);
+
+        classAttendance.setValue(classDay);
     }
 }
