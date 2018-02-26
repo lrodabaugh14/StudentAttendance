@@ -24,9 +24,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".AppUtil">
-        </activity>
+        <activity android:name=".AppUtil" />
         <activity
             android:name=".attendanceTracker"
             android:label="@string/app_name">
@@ -34,6 +32,11 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activity_selector"
+            android:label="@string/title_activity_selector"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ViewAttendance"></activity>
     </application>
 
 </manifest>

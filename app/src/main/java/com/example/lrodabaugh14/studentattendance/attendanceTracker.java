@@ -1,6 +1,7 @@
 package com.example.lrodabaugh14.studentattendance;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -93,24 +94,22 @@ public class attendanceTracker extends AppCompatActivity {
     }
     public void loadStudentNames(){
 
-//        TextView student1 = (TextView) findViewById(R.id.student1);
-//        student1.setText(stu.get("Name").toString());
-
-
-        ScrollView sv = (ScrollView) findViewById(R.id.scvStudents);
+        //Find linear layout and clear out all views to remove students
         LinearLayout ll = (LinearLayout) findViewById(R.id.llStudents);
         ll.removeAllViews();
 
-        // Create a LinearLayout element
+        //Create button and set the listener
         Button b = new Button(this);
         b.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT,0f));
         b.setText("Submit");
+
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onButtonClick();
             }
         });
+
         for(int i = 0; i< StudentInClass.size(); i++) {
             String key = (String) StudentInClass.keySet().toArray()[i];
             HashMap<String, Object> stu = (HashMap<String, Object>)StudentInClass.get(key);
@@ -118,46 +117,33 @@ public class attendanceTracker extends AppCompatActivity {
             LinearLayout w = new LinearLayout(this);
             w.setOrientation(LinearLayout.HORIZONTAL);
             w.setPadding(16,16,16,16);
-//            LinearLayout.LayoutParams Wider = new LinearLayout.LayoutParams(
-//                    LinearLayout.LayoutParams.MATCH_PARENT,
-//                    LinearLayout.LayoutParams.MATCH_PARENT,
-//                    2.0f
-//            );
 
             // Add text
             TextView tv = new TextView(this);
             tv.setTextSize(24);
             tv.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT, 1f));
-//            tv.layout(Wider);
+            tv.setText(stu.get("Name").toString());
+
+            //Insert Switch
             Switch s = new Switch(this);
             s.setChecked(true);
             s.setId(Integer.valueOf(key));
-            s.setHighlightColor(Color.GREEN);
-//            s.setBackgroundColor(Color.GREEN);
             s.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT, 6f));
 
-
-
-            // DO SOME FORMATTING stuff
-            tv.setText(stu.get("Name").toString());
-
-//            tv.setId(Integer.getInteger(key));
+            //Add the text view and switch to the linear layout
             w.addView(tv);
             w.addView(s);
-            // Add the LinearLayout element to the ScrollView
+            // Add the LinearLayout element to the Main Linear Layout
             ll.addView(w);
         }
+        // Add the button to the layout last
         ll.addView(b);
-
-
-
-        // Display the view
-//        setContentView(v);
 
     }
     private void onButtonClick(){
-        //TODO Set up submit attendance data, Gonna need to be creative here
+
         List<String> absentStudents = new ArrayList();
+
         for(int i=0; i < StudentInClass.size(); i++) {
             String key = (String) StudentInClass.keySet().toArray()[i];
             Switch s = (Switch) findViewById(Integer.valueOf(key));
@@ -174,10 +160,13 @@ public class attendanceTracker extends AppCompatActivity {
         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+                        startActivity(new Intent(attendanceTracker.this, activity_selector.class));
                         dialog.dismiss();
                     }
                 });
+
         alertDialog.show();
+
 
     }
 }
