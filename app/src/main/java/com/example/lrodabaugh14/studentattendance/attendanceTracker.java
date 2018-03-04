@@ -3,6 +3,7 @@ package com.example.lrodabaugh14.studentattendance;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.renderscript.ScriptIntrinsicYuvToRGB;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
@@ -22,10 +23,14 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by lrodabaugh14 on 1/3/2018.
@@ -35,6 +40,8 @@ public class attendanceTracker extends AppCompatActivity {
     studentDatabase db = new studentDatabase();
     HashMap<String, Object> StudentInClass = new HashMap();
     String strClass = "";
+    HashMap<String, Object> attendancePerClass = new HashMap();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,6 +92,8 @@ public class attendanceTracker extends AppCompatActivity {
         Object item = adapterView.getItemAtPosition(position);
         HashMap<String, Object> choseClass = (HashMap<String, Object>) AppUtil.hshTeachersClasses.get(item.toString());
         strClass = item.toString();
+        attendancePerClass.put(strClass,AppUtil.hshAttendancePerClass.get(strClass));
+
         ArrayList  students = (ArrayList) choseClass.get("Students");
         for(int i =0; i< students.size(); i++){
             StudentInClass.put(students.get(i).toString(), AppUtil.arrStudents.get(Long.valueOf((Long) students.get(i)).intValue()));
@@ -111,22 +120,41 @@ public class attendanceTracker extends AppCompatActivity {
         });
 
         for(int i = 0; i< StudentInClass.size(); i++) {
-            String key = (String) StudentInClass.keySet().toArray()[i];
+            final String key = (String) StudentInClass.keySet().toArray()[i];
             HashMap<String, Object> stu = (HashMap<String, Object>)StudentInClass.get(key);
+            final String strStuName = stu.get("Name").toString();
 
             LinearLayout w = new LinearLayout(this);
             w.setOrientation(LinearLayout.HORIZONTAL);
             w.setPadding(16,16,16,16);
-
             // Add text
             TextView tv = new TextView(this);
             tv.setTextSize(24);
             tv.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT, 1f));
-            tv.setText(stu.get("Name").toString());
+            tv.setText(strStuName);
+            tv.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View view) {
+                    onViewClick(key, strStuName);
+                }
+            });
 
             //Insert Switch
             Switch s = new Switch(this);
-            s.setChecked(true);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = new Date();
+
+            HashMap<String, Object> classDay = (HashMap<String, Object>) AppUtil.hshAttendancePerClass.get(strClass);
+            if (classDay != null && classDay.get(dateFormat.format(date)) != null) {
+                HashMap<String, Object> days = (HashMap<String, Object>) classDay.get(dateFormat.format(date));
+                if (days.get(key).equals("absent")) {
+                    s.setChecked(false);
+                } else {
+                    s.setChecked(true);
+                }
+            } else {
+                s.setChecked(true);
+            }
             s.setId(Integer.valueOf(key));
             s.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT, 6f));
 
@@ -138,17 +166,18 @@ public class attendanceTracker extends AppCompatActivity {
         }
         // Add the button to the layout last
         ll.addView(b);
-
     }
+
     private void onButtonClick(){
 
-        List<String> absentStudents = new ArrayList();
-
+        HashMap<String, String> absentStudents = new HashMap();
         for(int i=0; i < StudentInClass.size(); i++) {
             String key = (String) StudentInClass.keySet().toArray()[i];
             Switch s = (Switch) findViewById(Integer.valueOf(key));
-            if(!s.isChecked()) {
-                absentStudents.add(key);
+            if(s.isChecked()) {
+                absentStudents.put(key, "present");
+            } else {
+                absentStudents.put(key, "absent");
             }
         }
 
@@ -160,13 +189,48 @@ public class attendanceTracker extends AppCompatActivity {
         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        startActivity(new Intent(attendanceTracker.this, activity_selector.class));
                         dialog.dismiss();
                     }
                 });
 
         alertDialog.show();
+    }
+    private void onViewClick(String strStuID, String strStuName) {
+        ArrayList<String> datesMissed = new ArrayList();
+        HashMap classAttendance = new HashMap();
+        classAttendance =  (HashMap<String, Object>) attendancePerClass.get(strClass);
+        if (classAttendance != null) {
+            Object[] keys = classAttendance.keySet().toArray();
+            for (int i = 0; i < classAttendance.size(); i++) {
+                HashMap<String,String> day = (HashMap<String, String>) classAttendance.get(keys[i]);
+                if (day.get(strStuID).equals("absent")) {
+                    datesMissed.add(keys[i].toString());
+                }
 
+            }
 
+            Intent i = new Intent(attendanceTracker.this, ViewAttendance.class);
+            i.putExtra("stu_id", strStuID);
+            i.putExtra("stu_name", strStuName);
+            i.putExtra("class", strClass);
+            i.putExtra("days", datesMissed.toArray());
+            i.putStringArrayListExtra("dates_missed", datesMissed);
+            startActivity(i);
+
+        }  else {
+            AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+            alertDialog.setTitle("Alert");
+            String strAlert = "Attendance for " + strClass + " has never been taken";
+            alertDialog.setMessage(strAlert);
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+
+            alertDialog.show();
+
+        }
     }
 }

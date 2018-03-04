@@ -44,10 +44,13 @@ public class studentDatabase {
         DatabaseReference user = dbRef.child("Faculty").child(username);
         DatabaseReference dbStudent = dbRef.child("Students");
         DatabaseReference refClasses = dbRef.child("Classes");
+        DatabaseReference refAttend = dbRef.child("ClassAttendance");
+
 
         final List<Object> userInfo = getDbInfo(user);
         List<Object> students = getDbInfo(dbStudent);
         final List<Object> classes = getDbInfo(refClasses);
+        final List<Object> attendance = getDbInfo(refAttend);
 
         boolean matching = false;
         Thread.sleep(1000);
@@ -65,7 +68,12 @@ public class studentDatabase {
             if (!classes.isEmpty()) {
                 AppUtil.hashClasses = (HashMap<String, Object>) classes.get(0);
             }
+            if(!attendance.isEmpty()){
+                AppUtil.hshAttendancePerClass  = (HashMap<String, Object>) attendance.get(0);
+            }
         }
+
+
 
         return matching;
     }
@@ -89,7 +97,7 @@ public class studentDatabase {
         return info;
     }
 
-    public void submitAttendance(String strClass, List<String> absentStudents){
+    public void submitAttendance(String strClass, HashMap<String, String> absentStudents){
         DatabaseReference classAttendance =  dbRef.child("ClassAttendance").child(strClass);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -97,7 +105,8 @@ public class studentDatabase {
 
         HashMap<String, Object> classDay = new HashMap();
         classDay.put(dateFormat.format(date),absentStudents);
+        AppUtil.hshAttendancePerClass.put(strClass,classDay);
 
-        classAttendance.setValue(classDay);
+        classAttendance.child(dateFormat.format(date)).setValue(absentStudents);
     }
 }
