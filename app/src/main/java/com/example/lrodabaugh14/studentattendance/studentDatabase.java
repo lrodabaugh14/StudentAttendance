@@ -2,6 +2,7 @@ package com.example.lrodabaugh14.studentattendance;
 
 
 
+import android.content.SharedPreferences;
 import android.os.Looper;
 import android.text.format.DateFormat;
 import android.widget.ArrayAdapter;
@@ -13,12 +14,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import android.os.Handler;
+import android.widget.EditText;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import android.content.SharedPreferences.*;
 
 
 /**
@@ -28,8 +31,7 @@ import java.util.List;
 
 
 public class studentDatabase {
-    private Object lock = new Object();
-    private ChildEventListener mChildEventListener;
+
     FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     DatabaseReference dbRef = firebaseDatabase.getReference();
     String facNumber = "";
@@ -45,12 +47,16 @@ public class studentDatabase {
         DatabaseReference dbStudent = dbRef.child("Students");
         DatabaseReference refClasses = dbRef.child("Classes");
         DatabaseReference refAttend = dbRef.child("ClassAttendance");
+        DatabaseReference refEmergency = dbRef.child("EmergencyState");
 
 
-        final List<Object> userInfo = getDbInfo(user);
+
+        List<Object> userInfo = getDbInfo(user);
         List<Object> students = getDbInfo(dbStudent);
-        final List<Object> classes = getDbInfo(refClasses);
-        final List<Object> attendance = getDbInfo(refAttend);
+        List<Object> classes = getDbInfo(refClasses);
+        List<Object> attendance = getDbInfo(refAttend);
+        List<Object> emergency = getDbInfo(refEmergency);
+
 
         boolean matching = false;
         Thread.sleep(1000);
@@ -58,10 +64,24 @@ public class studentDatabase {
             HashMap<String, Object> hashMap = (HashMap<String, Object>) userInfo.get(0);
             String strPassword = (String) hashMap.get("Password");
             AppUtil.strFacID = String.valueOf(hashMap.get("ID"));
+            if(hashMap.containsKey("admin")){
+                if(Integer.valueOf(hashMap.get("admin").toString()) == 1){
+                    AppUtil.admin = true;
+                } else {
+                    AppUtil.admin = false;
+                }
+            }
             facNumber = String.valueOf(hashMap.get("ID"));
             matching = strPassword.equals(password);
         }
         if(matching){
+            if(!emergency.isEmpty()){
+                if (students.get(0).toString().equals("false")) {
+                    AppUtil.emergencyActive = false;
+                } else {
+                    AppUtil.emergencyActive = true;
+                }
+            }
             if (!students.isEmpty()) {
                 AppUtil.arrStudents = (ArrayList<Object>) students.get(0);
             }
@@ -108,5 +128,14 @@ public class studentDatabase {
         AppUtil.hshAttendancePerClass.put(strClass,classDay);
 
         classAttendance.child(dateFormat.format(date)).setValue(absentStudents);
+    }
+    public void setEmergency(){
+        if (AppUtil.emergencyActive) {
+            AppUtil.emergencyActive = false;
+            dbRef.child("EmergencyState").setValue("false");
+        } else {
+            AppUtil.emergencyActive = true;
+            dbRef.child("EmergencyState").setValue("true");
+        }
     }
 }

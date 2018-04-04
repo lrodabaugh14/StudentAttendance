@@ -5,9 +5,11 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.DownloadManager;
 import android.app.LoaderManager.LoaderCallbacks;
+import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -52,6 +54,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     private MobileServiceClient mClient;
     private static final int REQUEST_READ_CONTACTS = 0;
+    SharedPreferences pref;
+    SharedPreferences.Editor edit;
 
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
@@ -86,7 +90,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 return false;
             }
         });
-
+        Context context = LoginActivity.this;
+        pref = context.getSharedPreferences("userdetails", 0);
+        edit = pref.edit();
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -98,13 +104,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
 //
-////        // THis code is to skip login. Comment out when done testing
-//        String username = "landon_rodabaugh";
-//        String password = "password";
-//
-//        showProgress(true);
-//        mAuthTask = new UserLoginTask(username, password);
-//        mAuthTask.execute((Void) null);
+////        // THis code skips login if the device has been logged into
+        if(pref.getString("username", null) != null) {
+            String username = pref.getString("username", null);
+            String password = pref.getString("password", null);
+            showProgress(true);
+            mAuthTask = new UserLoginTask(username, password);
+            mAuthTask.execute((Void) null);
+        }
         //End of skip login code
 
     }
@@ -339,8 +346,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (success) {
-                startActivity(new Intent(LoginActivity.this, attendanceTracker.class));
+                edit.putString("username", mUsername);
+                edit.putString("password",mPassword);
+                if(AppUtil.admin) {
+                    startActivity(new Intent(LoginActivity.this, AdminEmergency.class));
+                }
+                else {
+                    startActivity(new Intent(LoginActivity.this, attendanceTracker.class));
+                }
                 finish();
+
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();

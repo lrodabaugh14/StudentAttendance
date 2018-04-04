@@ -26,10 +26,6 @@ public class ViewAttendance extends AppCompatActivity {
     String strClass;
     ArrayList<String> alDatesMissed;
 
-
-    ViewAttendance(){
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

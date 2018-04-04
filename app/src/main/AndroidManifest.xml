@@ -24,7 +24,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AppUtil" />
+        <activity android:name=".MyFirebaseMessagingsService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".attendanceTracker"
             android:label="@string/app_name">
@@ -36,7 +40,13 @@
             android:name=".activity_selector"
             android:label="@string/title_activity_selector"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ViewAttendance"></activity>
+        <activity android:name=".ViewAttendance" />
+        <activity android:name=".MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".AdminEmergency"></activity>
     </application>
 
 </manifest>
