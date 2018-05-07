@@ -48,6 +48,7 @@ public class studentDatabase {
         DatabaseReference refClasses = dbRef.child("Classes");
         DatabaseReference refAttend = dbRef.child("ClassAttendance");
         DatabaseReference refEmergency = dbRef.child("EmergencyState");
+        DatabaseReference refStuClasses = dbRef.child("StudentsClasses");
 
 
 
@@ -56,6 +57,7 @@ public class studentDatabase {
         List<Object> classes = getDbInfo(refClasses);
         List<Object> attendance = getDbInfo(refAttend);
         List<Object> emergency = getDbInfo(refEmergency);
+        List<Object> stuClasses = getDbInfo(refStuClasses);
 
 
         boolean matching = false;
@@ -83,7 +85,10 @@ public class studentDatabase {
                 }
             }
             if (!students.isEmpty()) {
-                AppUtil.arrStudents = (ArrayList<Object>) students.get(0);
+                AppUtil.hshStudents = (HashMap<String, Object>) students.get(0);
+            }
+            if (!stuClasses.isEmpty()) {
+                AppUtil.arrStuClasses = (ArrayList<Object>) stuClasses.get(0);
             }
             if (!classes.isEmpty()) {
                 AppUtil.hashClasses = (HashMap<String, Object>) classes.get(0);

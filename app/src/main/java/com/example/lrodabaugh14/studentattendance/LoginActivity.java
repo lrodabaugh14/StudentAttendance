@@ -30,6 +30,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.preference.PreferenceManager;
 
 import com.google.gson.JsonElement;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
@@ -54,8 +55,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     private MobileServiceClient mClient;
     private static final int REQUEST_READ_CONTACTS = 0;
-    SharedPreferences pref;
-    SharedPreferences.Editor edit;
+//    public SharedPreferences preferences = getSharedPreferences("userdetails", getBaseContext().MODE_PRIVATE);
+//    public SharedPreferences.Editor editor = preferences.edit();
+
 
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
@@ -68,7 +70,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mProgressView;
     private View mLoginFormView;
     private studentDatabase stuDB = new studentDatabase();
+    LoginActivity()
+    {
 
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -90,9 +95,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 return false;
             }
         });
-        Context context = LoginActivity.this;
-        pref = context.getSharedPreferences("userdetails", 0);
-        edit = pref.edit();
+
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -105,13 +108,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mProgressView = findViewById(R.id.login_progress);
 //
 ////        // THis code skips login if the device has been logged into
-        if(pref.getString("username", null) != null) {
-            String username = pref.getString("username", null);
-            String password = pref.getString("password", null);
-            showProgress(true);
-            mAuthTask = new UserLoginTask(username, password);
-            mAuthTask.execute((Void) null);
-        }
+//        if(preferences.getString("username", null) != null) {
+//            String username = preferences.getString("username", null);
+//            String password = preferences.getString("password", null);
+//            showProgress(true);
+//            mAuthTask = new UserLoginTask(username, password);
+//            mAuthTask.execute((Void) null);
+//        }
         //End of skip login code
 
     }
@@ -346,10 +349,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (success) {
-                edit.putString("username", mUsername);
-                edit.putString("password",mPassword);
+//                editor.putString("username", mUsername);
+//                editor.putString("password",mPassword);
                 if(AppUtil.admin) {
-                    startActivity(new Intent(LoginActivity.this, AdminEmergency.class));
+                    startActivity(new Intent(LoginActivity.this, AdminActivity.class));
                 }
                 else {
                     startActivity(new Intent(LoginActivity.this, attendanceTracker.class));
@@ -369,6 +372,5 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
 
     }
-
 }
 

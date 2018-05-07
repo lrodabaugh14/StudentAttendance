@@ -1,13 +1,17 @@
 package com.example.lrodabaugh14.studentattendance;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.preference.PreferenceManager;
 import android.renderscript.ScriptIntrinsicYuvToRGB;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -40,6 +44,8 @@ public class attendanceTracker extends AppCompatActivity {
     studentDatabase db = new studentDatabase();
     HashMap<String, Object> StudentInClass = new HashMap();
     String strClass = "";
+
+
     HashMap<String, Object> attendancePerClass = new HashMap();
 
     @Override
@@ -50,6 +56,13 @@ public class attendanceTracker extends AppCompatActivity {
         List<String> teacherClasses = new ArrayList<String>();
 //        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter();
         String facID = AppUtil.strFacID;
+        Button btnLogout = (Button) findViewById(R.id.btnLogout);
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onLogoutClick();
+            }
+        });
         Spinner classPicker = (Spinner) findViewById(R.id.classChooser);
         classPicker.setOnItemSelectedListener(new OnItemSelectedListener() {
 
@@ -96,7 +109,7 @@ public class attendanceTracker extends AppCompatActivity {
 
         ArrayList  students = (ArrayList) choseClass.get("Students");
         for(int i =0; i< students.size(); i++){
-            StudentInClass.put(students.get(i).toString(), AppUtil.arrStudents.get(Long.valueOf((Long) students.get(i)).intValue()));
+            StudentInClass.put(students.get(i).toString(), AppUtil.hshStudents.get(students.get(i).toString()));
         }
         loadStudentNames();
 
@@ -232,5 +245,12 @@ public class attendanceTracker extends AppCompatActivity {
             alertDialog.show();
 
         }
+    }
+    private void onLogoutClick() {
+//        LoginActivity loginActivity = new LoginActivity();
+//        loginActivity.onLogout();
+        AppUtil.logout();
+        startActivity(new Intent(attendanceTracker.this, LoginActivity.class));
+
     }
 }
